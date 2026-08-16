@@ -1,0 +1,40 @@
+# Virtual Environment
+
+myenv/
+venv/
+.venv/
+
+# Environment Variables / Secrets
+
+.env
+.env.*
+!.env.example
+
+# Python cache
+
+**pycache**/
+*.py[cod]
+*$py.class
+
+# Distribution / build
+
+build/
+dist/
+*.egg-info/
+
+# Jupyter Notebook
+
+.ipynb_checkpoints/
+
+# VS Code
+
+.vscode/
+
+# OS files
+
+.DS_Store
+Thumbs.db
+
+# Logs
+
+*.log
