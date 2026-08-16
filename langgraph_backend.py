@@ -5,10 +5,12 @@ from langchain_core.messages import BaseMessage
 from langgraph.graph.message import add_messages
 from langgraph.checkpoint.memory import InMemorySaver
 from dotenv import load_dotenv
+import os
 
 load_dotenv()
 
 model=ChatGroq(model="groq/compound")
+api_key=os.getenv("GROQ_API_KEY")
 
 class ChatbotState(TypedDict):
     messages:Annotated[list[BaseMessage],add_messages]
