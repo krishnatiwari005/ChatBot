@@ -1,5 +1,5 @@
 import streamlit as st
-from langgraph_backend import chat
+from langgraph_backend import chat,retrieve_all_threads
 from langchain_core.messages import HumanMessage
 import uuid
 
@@ -30,9 +30,11 @@ if 'thread_id' not in st.session_state:
     st.session_state['thread_id']=generate_thread_id()
 
 if 'chat_threads' not in st.session_state:
-    st.session_state['chat_threads']=[]
+    st.session_state['chat_threads']=retrieve_all_threads()
 
 add_thread(st.session_state['thread_id'])
+
+# side bar UI
 
 st.sidebar.title("CHAT HISTORY")
 
@@ -40,6 +42,7 @@ if st.sidebar.button("New Chat"):
     reset_chat()
 
 st.sidebar.header("Conversations")
+#----------------------------------
 
 for thread_id in st.session_state['chat_threads'][::-1]:
     if st.sidebar.button(str(thread_id)):

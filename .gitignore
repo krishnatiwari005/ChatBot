@@ -38,3 +38,8 @@ Thumbs.db
 # Logs
 
 *.log
+
+
+*.bin
+chatbot.db-shm
+chatbot.db-wal
