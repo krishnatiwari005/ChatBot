@@ -1,7 +1,7 @@
 from langgraph.graph import StateGraph,START,END
 from langchain_groq import ChatGroq
 from typing import TypedDict,Annotated
-from langchain_core.messages import BaseMessage
+from langchain_core.messages import BaseMessage,HumanMessage
 from langgraph.graph.message import add_messages
 from langgraph.checkpoint.memory import InMemorySaver
 from dotenv import load_dotenv
@@ -9,7 +9,7 @@ import os
 
 load_dotenv()
 
-model=ChatGroq(model="groq/compound")
+model=ChatGroq(model="openai/gpt-oss-120b")
 api_key=os.getenv("GROQ_API_KEY")
 
 class ChatbotState(TypedDict):
