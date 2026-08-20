@@ -5,3 +5,4 @@ dotenv
 langchain-groq
 streamlit
 langgraph-checkpoint-sqlite
+langchain_community

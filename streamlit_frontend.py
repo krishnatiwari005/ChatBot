@@ -1,6 +1,6 @@
 import streamlit as st
 from langgraph_backend import chat,retrieve_all_threads
-from langchain_core.messages import HumanMessage
+from langchain_core.messages import HumanMessage,AIMessage,ToolMessage
 import uuid
 
 def generate_thread_id():
@@ -81,11 +81,28 @@ if user_input:
 
     
     with st.chat_message('assistant'):
-        ai_message=st.write_stream(
-            message_chunk.content for message_chunk,metadata in chat.stream(
+        status_holder={'box':None}
+        def ai_only_stream():
+            for message_chunk,metadata in chat.stream(
                  {'messages':[HumanMessage(content=user_input)]},
                     config=config,
-                    stream_mode='messages'
-            )
-        )
+                    stream_mode='messages'                
+            ):
+                if isinstance(message_chunk,ToolMessage):
+                    tool_name=getattr(message_chunk,"name","tool")
+                    if status_holder['box'] is None:
+                        status_holder['box']=st.status(
+                            f"using{tool_name}...",
+                            expanded=True,
+                        )
+                    else:
+                        status_holder['box'].update(
+                            label=f"using{tool_name}...",
+                            state='running',
+                            expanded=True,                        
+                        )
+                if isinstance(message_chunk,AIMessage):        
+                    yield message_chunk.content
+        ai_message=st.write_stream(ai_only_stream())        
+
     st.session_state['message_history'].append({'role':'assistant','content':ai_message})
