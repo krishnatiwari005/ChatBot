@@ -10,3 +10,4 @@ langchain_mcp_adapters
 langchain_huggingface
 sentence-transformers
 faiss-cpu
+ddgs

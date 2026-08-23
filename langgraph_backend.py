@@ -25,6 +25,7 @@ model=ChatGroq(model="openai/gpt-oss-120b")
 api_key=os.getenv("GROQ_API_KEY")
 embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
 
+stock_api_key=os.getenv("api_key")
 # -------------------
 # 2. PDF retriever store (per thread)
 # -------------------
@@ -125,7 +126,7 @@ def ingest_pdf(file_bytes: bytes,thread_id: str,filename: Optional[str] = None) 
             pass
 
 #tools
-search_tool=DuckDuckGoSearchRun(region="us-en")
+search_tool=DuckDuckGoSearchRun()
 
 @tool
 def calculate(first_num:float,second_num:float,operation:str)->dict:
@@ -148,7 +149,7 @@ def calculate(first_num:float,second_num:float,operation:str)->dict:
 @tool 
 def get_stock_price(symbol:str)->dict:
     "fetch latest stock price for a given sumbol (eg: AAPL,TSLA)using alpha vantage api key "
-    url= f"https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol={symbol}&apikey=P2QNQX7PU6WROV1W"
+    url= f"https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol={symbol}&apikey={stock_api_key}"
     r=requests.get(url)
     return r.json
 
