@@ -17,10 +17,7 @@ import tempfile
 import os
 import sqlite3
 import requests
-import uuid
 
-def generate_thread_id():
-    return str(uuid.uuid4())
 
 load_dotenv()
 
@@ -28,7 +25,7 @@ model=ChatGroq(model="openai/gpt-oss-120b")
 api_key=os.getenv("GROQ_API_KEY")
 embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
 
-stock_api_key=os.getenv("ALPHA_VANTAGE_API_KEY")
+stock_api_key=os.getenv("api_key")
 # -------------------
 # 2. PDF retriever store (per thread)
 # -------------------
@@ -205,7 +202,7 @@ graph.add_edge(START,'chat_node')
 graph.add_conditional_edges('chat_node',tools_condition)
 graph.add_edge('tools','chat_node')
 
-chat_graph=graph.compile(checkpointer=checkpointer)
+chat=graph.compile(checkpointer=checkpointer)
 
 def retrieve_all_threads():
     all_threads=set()
@@ -220,17 +217,3 @@ def thread_has_document(thread_id: str) -> bool:
 
 def thread_document_metadata(thread_id: str) -> dict:
     return _THREAD_METADATA.get(str(thread_id), {})
-
-def load_conversation(thread_id: str):
-    state = chat_graph.get_state(
-        config={
-            "configurable": {
-                "thread_id": str(thread_id)
-            }
-        }
-    )
-
-    if not state or not state.values:
-        return []
-
-    return state.values.get("messages", [])
